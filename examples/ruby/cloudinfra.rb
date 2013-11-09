@@ -6,6 +6,9 @@ require 'json'
 API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
 API_SECRET = "YYYYYYYYYYYYYYYYYYYYYYYYYYYY"
 
+S3_KEY = "Fill your s3 key"
+S3_PASS = "fill your s3 pass"
+
 EMAIL = "xyz@abc.com"
 URL = "http://cloudinfra.in/api/v1"
 
@@ -164,7 +167,7 @@ end
 def workflow1
   auth_code = perform_authenticate
 
-  puts perform_add_credential(auth_code, EMAIL, "aws", "aws1", "AKIAIY3BMD4T6DI6MKAA", "7IS2ohmzidLmUBYDW/Vq6pmSCGasJRgDrEfXhCzg")
+  puts perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3_KEY, S3_PASS)
 
   puts perform_load(auth_code, EMAIL, "s3://cloudinfra-west1/data/multi_part.txt", "amal", "aws1")
 
@@ -217,7 +220,7 @@ end
 
 def workflow2
   auth_code = perform_authenticate
-  puts perform_add_credential(auth_code, EMAIL, "aws", "aws1", "AKIAIY3BMD4T6DI6MKAA", "7IS2ohmzidLmUBYDW/Vq6pmSCGasJRgDrEfXhCzg")
+  puts perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3_KEY, S3_PASS)
   puts perform_load(auth_code, EMAIL, "s3://cloudinfra-west1/data/multi_part.txt", "13k", "aws1")
   puts perform_deselect(auth_code, EMAIL, ".*")
   puts perform_select(auth_code, EMAIL, "13k")
@@ -227,7 +230,7 @@ end
 
 def workflow3
   auth_code = perform_authenticate
-  puts perform_add_credential(auth_code, EMAIL, "aws", "aws1", "AKIAIY3BMD4T6DI6MKAA", "7IS2ohmzidLmUBYDW/Vq6pmSCGasJRgDrEfXhCzg")
+  puts perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3_KEY, S3_PASS)
   puts perform_load(auth_code, EMAIL, "s3://cloudinfra-west1/data/btchunk3", "10m", "aws1")
   puts perform_deselect(auth_code, EMAIL, ".*")
   puts perform_select(auth_code, EMAIL, "10m")

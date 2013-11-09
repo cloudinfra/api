@@ -1,3 +1,4 @@
+#!env python
 import requests
 import json
 
@@ -7,14 +8,14 @@ class colors:
     FAIL = '\033[91m'
     ENDC = '\033[0m'
 
-API_KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-API_SECRET = "YYYYYYYYYYYYYYYYYYYYYYY"
+API_KEY = "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+API_SECRET = "yyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy"
 
-S3KEY = "XXXXXXXXXXXXXXXXXXXXXXXXXXXX"
-S3PASS = "YYYYYYYYYYYYYYYYYYYYYYY"
+EC2_KEY= "fill your s3 key"
+EC2_PASS= "fill your s3 secret"
 
 
-EMAIL = "xyz@abc.com"
+EMAIL = "xxx@gmail.com"
 URL = "http://cloudinfra.in/api/v1"
 
 def perform_authenticate():
@@ -115,14 +116,22 @@ def perform_mapreduce(auth_code, email, mapcmd, groupby, reducecmd, filename):
 
 def workflow1():
   auth_code = perform_authenticate()
-  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3KEY, S3PASS)
+  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", EC2_KEY, EC2_PASS)
   print perform_load(auth_code, EMAIL, "s3://cloudinfra-west1/data/multi_part.txt", "amal", "aws1")
   print perform_store(auth_code, EMAIL, "s3://cloudinfra-west1/data/amal.txt", "amal", "aws1")
   print perform_delete_credential(auth_code, EMAIL, "aws1")
 
+def s3_s3_cpy(froms3, tos3):
+  auth_code = perform_authenticate()
+  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", EC2_KEY, EC2_PASS)
+  print perform_load(auth_code, EMAIL, froms3, "s3copy.temp", "aws1")
+  print perform_store(auth_code, EMAIL, tos3, "s3copy.temp", "aws1")
+  print perform_delete_credential(auth_code, EMAIL, "aws1")
+
+
 def workflow2():
   auth_code = perform_authenticate()
-  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3KEY, S3PASS)
+  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", EC2_KEY, EC2_PASS)
   print perform_load(auth_code, EMAIL, "s3://cloudinfra-west1/data/multi_part.txt", "13k", "aws1")
   print perform_deselect(auth_code, EMAIL, ".*")
   print perform_select(auth_code, EMAIL, "13k")
@@ -131,7 +140,7 @@ def workflow2():
 
 def workflow3():
   auth_code = perform_authenticate()
-  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3KEY, S3PASS)
+  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", EC2_KEY, EC2_PASS)
   print perform_load(auth_code, EMAIL, "s3://cloudinfra-west1/data/btchunk3", "10m", "aws1")
   print perform_deselect(auth_code, EMAIL, ".*")
   print perform_select(auth_code, EMAIL, "10m")
@@ -148,6 +157,5 @@ def workflow3():
 
 
 if __name__ == '__main__':
-  workflow1()
-  workflow2()
-  workflow3()
+  import sys
+  s3_s3_cpy(sys.argv[1], sys.argv[2])
