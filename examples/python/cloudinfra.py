@@ -113,6 +113,12 @@ def perform_mapreduce(auth_code, email, mapcmd, groupby, reducecmd, filename):
   result = post(mapreduce_uri, mapreduce_params)
   return result
 
+def perform_terminate(auth_code, email, localname, typecode):
+  term_params = {"authCode" : auth_code, "email" : email, "localname" : localname, "type" : typecode}
+  terminate_uri = URL + "/terminate"
+  result = post(terminate_uri, term_params)
+  return result
+
 def workflow1():
   auth_code = perform_authenticate()
   print perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3KEY, S3PASS)
@@ -142,6 +148,15 @@ def workflow3():
   print perform_deselect(auth_code, EMAIL, ".*")
   print perform_select(auth_code, EMAIL, "t9")
   print perform_view(auth_code, EMAIL, "tail", "sort", 5000000, 50000)
+  print perform_delete_credential(auth_code, EMAIL, "aws1")
+
+def lineanalysis():
+  auth_code = perform_authenticate()
+  print perform_add_credential(auth_code, EMAIL, "aws", "aws1", S3KEY, S3PASS)
+  print perform_load(auth_code, EMAIL, "s3://cloudinfra-west2/shared/logs/apache_logs/logs/access_log", "apache", "aws1")
+  print perform_select(auth_code, EMAIL, "apache")
+  print perform_terminate(auth_code, EMAIL, "apache", 1)
+  print perform_view(auth_code, EMAIL, r'''cut -f2 -d'['  | cut -f1 -d']' | cut -f1 -d: | python -c 'exec("from datetime import datetime; import sys;\nfor i in sys.stdin:\n  print datetime.strptime(i.strip(),\"%d/%b/%Y\").strftime(\"%a\")\n")' | sort | uniq -c''', r'''awk '{a[$2]+=$1} END{for(i in a) print a[i],i; }' | sort -nr -t: -k2''', 0, 5000)
   print perform_delete_credential(auth_code, EMAIL, "aws1")
 
 
